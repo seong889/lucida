@@ -1,15 +1,16 @@
 CUDA=/usr/local/cuda
 CXX=g++
-CXX_FLAGS = simplee -I$(CUDA)/include
+CXX_FLAGS = -I$(CUDA)/include -I$(CAFFE)/include
+#CXX_FLAGS = simplee -I$(CUDA)/include
 LINK_FLAGS = -L$(CUDA)/lib64 \
 			 -lcudart \
-			 -lcaffe \
-			 -lglog
+			 -L$(CAFFE)/lib \
+			 -lglog \
+			 -lcaffe
 
 MODEL   = ../model/asr.prototxt
 WEIGHTS = ../model/asr.caffemodel
 INPUT   = ../input/features.in
-
 EXEC = dnn_asr
 SOURCES=dnn-asr.cpp ../../utils/timer.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
