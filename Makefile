@@ -15,8 +15,8 @@ docker:
 
 ## build local environment
 THRIFT_VERSION=0.9.2
-export THRIFT_ROOT=$(shell pwd)/tools/thrift-$(THRIFT_VERSION)
-export CAFFE=$(shell pwd)/tools/caffe/distribute
+#export THRIFT_ROOT=$(shell pwd)/tools/thrift-$(THRIFT_VERSION)
+#export CAFFE=$(shell pwd)/tools/caffe/distribute
 export LUCIDAROOT=$(shell pwd)/lucida
 local:
 	cd tools && make && cd - && cd lucida && ./thrift-gen.sh && cd - && make all
