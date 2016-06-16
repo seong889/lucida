@@ -12,6 +12,7 @@ CXX_FLAGS  = -O3 \
 						 -fpermissive \
 						 -I$(COMMON)/include \
 						 -I$(CAFFE)/include \
+						 -I$(CUDA)/include \
 						 -Iz \
 						 -I/usr/local/include \
 

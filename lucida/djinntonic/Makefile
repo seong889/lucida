@@ -1,7 +1,7 @@
 .PHONY: all tonic-common djinn tonic-img clean dist-clean
 
-export CPU_ONLY=1
-
+export CPU_ONLY=0
+export CUDA=/usr/local/cuda
 export INCLUDE_DIRS:=/usr/local/include
 export LIBRARY_DIRS:=/usr/local/lib
 

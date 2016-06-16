@@ -3,6 +3,7 @@ CXX_FLAGS = -O3 \
 						$(INCLUDE_DIRS) \
 						-fpermissive \
 						-I./include/ \
+						-I$(CUDA)/include/ \
 						-I$(CAFFE)/include/ \
 
 ifeq ($(CPU_ONLY), 1)
