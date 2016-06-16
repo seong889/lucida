@@ -11,14 +11,18 @@ asr_kaldi=../
 ################
 cd $asr_kaldi
 # Untar the src and tools tarball
-if [ ! -d tools ]; then
-  tar -xzf tools.tar.gz
-  cd ./tools/
-  make -j $THREADS ;
-  cd ..
-fi
 
-tar -xzf src.tar.gz --overwrite
+# if [ ! -d tools ]; then
+#   tar -xzf tools.tar.gz
+  
+# fi
+
+cd ./tools/
+make -j $THREADS ;
+cd ..
+
+#tar -xzf src.tar.gz --overwrite
+
 cd ./src/
 ./configure ;
 make -j $THREADS ;
