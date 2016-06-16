@@ -1,5 +1,5 @@
 ## Install Djinn specific version of Caffe
-export CPU_ONLY=1
+export CPU_ONLY=0
 
 if [ -z "$THREADS" ]; then
   THREADS=4
