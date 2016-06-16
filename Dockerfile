@@ -1,15 +1,15 @@
 ####
 # Builds the lucida base image
-FROM ubuntu:14.04
+FROM nvidia/cuda:7.5-cudnn4-devel-ubuntu14.04
 
 #### environment variables
 ENV LUCIDAROOT /usr/local/lucida/lucida
 ENV THRIFT_ROOT /usr/src/thrift-$THRIFT_VERSION
 ENV LD_LIBRARY_PATH /usr/local/lib
 ENV CAFFE /usr/src/caffe/distribute
-ENV CPU_ONLY 1 # for caffe
+ENV CPU_ONLY 0 # for caffe
 
-ENV OPENCV_VERSION 2.4.9
+ENV OPENCV_VERSION 2.4.10
 ENV THRIFT_VERSION 0.9.2
 ENV THREADS 4
 ENV PROTOBUF_VERSION 2.5.0
@@ -69,11 +69,40 @@ RUN \
   rm -rf /var/lib/apt/lists/* && \
   rm -rf /var/cache/oracle-jdk$JAVA_VERSION-installer
 
+## clone library & lucida
+
 #### Thrift
 RUN cd /usr/src \
  && wget "http://archive.apache.org/dist/thrift/$THRIFT_VERSION/thrift-$THRIFT_VERSION.tar.gz" \
- && tar xf thrift-$THRIFT_VERSION.tar.gz \
- && cd thrift-$THRIFT_VERSION \
+ && tar xf thrift-$THRIFT_VERSION.tar.gz
+
+
+#### OpenCV
+RUN mkdir -p /usr/src/opencv
+RUN cd /usr/src/opencv \
+  && git clone https://github.com/Itseez/opencv.git opencv-$OPENCV_VERSION \
+  && cd opencv-$OPENCV_VERSION \
+  && git checkout $OPENCV_VERSION
+
+
+#### Protobuf
+RUN mkdir -p /usr/src/protobuf
+RUN cd /usr/src/protobuf \
+  && wget "https://github.com/google/protobuf/releases/download/v$PROTOBUF_VERSION/protobuf-$PROTOBUF_VERSION.tar.gz" \
+  && tar xf protobuf-$PROTOBUF_VERSION.tar.gz
+
+
+#### Caffe for djinn
+RUN cd /usr/src \
+  && git clone https://github.com/seong889/caffe_lucida.git \
+  && mv caffe_lucida caffe \
+  && cd caffe \
+  && git checkout ipa
+
+## install library & lucida
+
+#### Thrift
+RUN cd /usr/src/thrift-$THRIFT_VERSION \
  && ./configure \
  && make -j $THREADS\
  && make -j $THREADS install \
@@ -84,38 +113,29 @@ RUN cd /usr/src \
  && cd ../../..
 
 #### OpenCV
-RUN mkdir -p /usr/src/opencv
-RUN cd /usr/src/opencv \
-  && git clone https://github.com/Itseez/opencv.git opencv-$OPENCV_VERSION \
-  && cd opencv-$OPENCV_VERSION \
-  && git checkout $OPENCV_VERSION \
+RUN cd /usr/src/opencv/opencv-$OPENCV_VERSION \
   && mkdir build \
   && cd build \
-  && cmake .. \
+  && cmake CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local -D BUILD_TIFF=ON -D CUDA_GENERATION=Kepler -D WITH_CUDA=ON .. \
   && make -j$THREADS \
   && make -j$THREADS install
 
 #### Protobuf
-RUN mkdir -p /usr/src/protobuf
 RUN cd /usr/src/protobuf \
-  && wget "https://github.com/google/protobuf/releases/download/v$PROTOBUF_VERSION/protobuf-$PROTOBUF_VERSION.tar.gz" \
-  && tar xf protobuf-$PROTOBUF_VERSION.tar.gz \
   && cd protobuf-$PROTOBUF_VERSION \
   && ./configure \
   && make -j$THREADS \
   && make install
 
 #### Caffe for djinn
-RUN cd /usr/src \
-  && git clone https://github.com/jhauswald/caffe.git \
-  && cd caffe \
-  && git checkout ipa \
+RUN cd /usr/src/caffe \
   && cp Makefile.config.example Makefile.config \
   && make -j$THREADS \
   && make distribute
 
 ## install lucida
 # fixes some weird OE compiliation issue
+RUN ls /usr/src/caffe/distribute -R
 RUN mkdir -p /usr/local/lucida
 WORKDIR /usr/local/lucida
 ADD . /usr/local/lucida
