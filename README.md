@@ -64,3 +64,12 @@ Then restart all the services.
 
 Note: Instructions to download and build Sirius can be found at
 [http://sirius.clarity-lab.org](http://sirius.clarity-lab.org)
+
+## Docker build with GPU(CUDA)
+
+ - install Nvidia-Docker : refer to [https://github.com/seong889/nvidia-docker](https://github.com/seong889/nvidia-docker)
+ - Clone this Repository
+ - run docker-build-lucida.sh
+`sudo sh docker-build-lucida.sh`
+ - run docker image
+`sudo nvidia-docker run -it lucida:install`
