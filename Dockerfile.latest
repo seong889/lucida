@@ -1,0 +1,19 @@
+####
+# Builds the lucida base image
+FROM lucida:install
+
+#### environment variables
+ENV LUCIDAROOT /usr/local/lucida/lucida
+ENV THRIFT_ROOT /usr/src/thrift-$THRIFT_VERSION
+ENV LD_LIBRARY_PATH /usr/local/lib
+ENV CAFFE /usr/src/caffe/distribute
+ENV CPU_ONLY 0 # for caffe
+
+ENV OPENCV_VERSION 2.4.10
+ENV THRIFT_VERSION 0.9.2
+ENV THREADS 10
+ENV PROTOBUF_VERSION 2.5.0
+ENV JAVA_VERSION 7
+ENV JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8 
+
+RUN /bin/sh /usr/local/lucida/tools/download_wiki_index.sh
