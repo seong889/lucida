@@ -128,8 +128,8 @@ irstlm/Makefile: irstlm
 	./configure --prefix `pwd` 
 
 irstlm:
-	svn -r 618 co --non-interactive --trust-server-cert https://svn.code.sf.net/p/irstlm/code/trunk irstlm
-
+	#svn -r 618 co --non-interactive --trust-server-cert https://svn.code.sf.net/p/irstlm/code/trunk irstlm
+	git clone -b r618 https://github.com/seong889/irstlm.git irstlm
 atlas: ATLAS/include/cblas.h
 
 ATLAS/include/cblas.h: | atlas3.8.3.tar.gz
